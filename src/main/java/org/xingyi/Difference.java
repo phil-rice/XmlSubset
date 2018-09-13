@@ -5,10 +5,10 @@ import org.xingyi.utils.Path;
 import java.util.List;
 
 public class Difference<T> {
-    List<Path> path;
-    private final T left;
-    private final T right;
-    private String reason;
+    final public List<Path> path;
+    final public T left;
+    final public T right;
+    final public String reason;
 
     public Difference(List<Path> path, T left, T right, String reason) {
         this.path = path;
@@ -21,7 +21,7 @@ public class Difference<T> {
     public String toString() {
         return "Difference{" +
                 "path=" + path +
-                ", reason='" + reason + '\'' +
+                ", reason='" + reason  +
                 ", left=" + left +
                 ", right=" + right +
                 '}';

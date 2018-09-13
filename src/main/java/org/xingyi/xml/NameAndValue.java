@@ -6,6 +6,7 @@ import org.xingyi.utils.Path;
 import org.xingyi.utils.PathAndT;
 
 import java.util.List;
+import java.util.Objects;
 
 public class NameAndValue {
     String name;
@@ -21,5 +22,19 @@ public class NameAndValue {
     }
 
     @Override
-    public String toString() { return "Name'" + name + "->" + value + '}'; }
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        NameAndValue that = (NameAndValue) o;
+        return Objects.equals(name, that.name) &&
+                Objects.equals(value, that.value);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, value);
+    }
+
+    @Override
+    public String toString() { return "Name'" + name + "->[" + value + "]}"; }
 }

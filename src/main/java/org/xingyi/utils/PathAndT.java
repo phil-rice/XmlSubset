@@ -1,6 +1,7 @@
 package org.xingyi.utils;
 
 import java.util.List;
+import java.util.Objects;
 
 public class PathAndT<T extends HasChildren<T>> {
     public final List<Path> path;
@@ -18,5 +19,19 @@ public class PathAndT<T extends HasChildren<T>> {
     @Override
     public String toString() {
         return "PathAnd{" + path + " ==> " + t + '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        PathAndT<?> pathAndT = (PathAndT<?>) o;
+        return Objects.equals(path, pathAndT.path) &&
+                Objects.equals(t, pathAndT.t);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(path, t);
     }
 }

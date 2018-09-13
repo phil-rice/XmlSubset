@@ -10,7 +10,7 @@ public interface ListOps {
 
     static <T, To> List<To> mapWithIndex(List<T> from, Function2<T, Integer, To> fn) {
         List<To> result = new ArrayList<>();
-        for (int i = 0; i < result.size(); i++)
+        for (int i = 0; i < from.size(); i++)
             result.add(fn.apply(from.get(i), i));
         return result;
     }

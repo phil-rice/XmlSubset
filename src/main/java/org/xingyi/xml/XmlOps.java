@@ -27,25 +27,26 @@ public class XmlOps {
     public static DocumentBuilderFactory builderFactory = DocumentBuilderFactory.newInstance();
 
     public static Document parseXml(String xml) {
-        DocumentBuilder builder = null;
+        builderFactory.setIgnoringElementContentWhitespace(true);
         try {
-            builder = builderFactory.newDocumentBuilder();
+            DocumentBuilder builder = builderFactory.newDocumentBuilder();
             return builder.parse(new StringBufferInputStream(xml));
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
 
-    public static String prettyPrint(Document doc) {
+    public static String prettyPrint(Node doc) {
         try {
             Transformer transformer = TransformerFactory.newInstance().newTransformer();
-            transformer.setOutputProperty(OutputKeys.INDENT, "yes");
-            transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
+//            transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+//            transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
+            transformer.setOutputProperty("omit-xml-declaration", "yes");
             StreamResult result = new StreamResult(new StringWriter());
             DOMSource source = new DOMSource(doc);
             transformer.transform(source, result);
             String xmlString = result.getWriter().toString();
-            return xmlString;
+            return xmlString.trim();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -53,8 +54,12 @@ public class XmlOps {
 
 
     static List<Difference<Xml>> isASubset(Xml one, Xml two) {
-        Subset<Xml> subset = new SubsetImpl<>();
+        Subset<Xml> subset = new SubsetImpl<>(x -> prettyPrint(x.node));
         return subset.isASubset(new PathAndT<Xml>(new ArrayList<>(), one), new PathAndT<Xml>(new ArrayList<>(), two));
+    }
+
+    static List<Difference<Xml>> isASubset(String one, String two) {
+        return isASubset(new Xml(parseXml(one)), new Xml(parseXml(two)));
     }
 
     static public void main(String[] args) throws IOException, SAXException {

@@ -7,25 +7,46 @@ import org.xingyi.utils.PathAndT;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Function;
 
 public class SubsetImpl<T extends HasChildAndEquals<T>> implements Subset<T> {
 
+    Function<T, String> printer;
+
+    public SubsetImpl(Function<T, String> printer) {
+        this.printer = printer;
+    }
+
+    public SubsetImpl() {
+        this(Object::toString);
+    }
+
     private boolean debug = false;
 
+    <X> void debug(List<X> list, String message) {
+        if (!debug)
+            return;
+        StringBuffer buffer = new StringBuffer();
+        for (int i = 0; i < list.size(); i++)
+            buffer.append("  ");
+        System.out.println(buffer + message);
+    }
+
     public List<Difference<T>> isASubset(PathAndT<T> one, PathAndT<T> two) {
-        if (debug) System.out.println("isASubset " + one + " ---------- " + two);
+        debug(one.path, "isASubset " + one + " ---------- " + two);
         List<Difference<T>> diffs = one.t.isEqualIgnoringChildren(one.path, two.t);
         return diffs.isEmpty() ? checkChildren(one, two) : diffs;
     }
 
     List<Difference<T>> checkChildren(PathAndT<T> one, PathAndT<T> two) {
-        if (debug) System.out.println("checkChildren (" + one + "---" + two);
+        debug(one.path, "checkChildren (" + one + "---" + two);
         return ListOps.<PathAndT<T>, Difference<T>>flatMap(one.children(), oneChild -> isIn(oneChild, two));
     }
 
     private Optional<Difference<T>> isIn(PathAndT<T> oneChild, PathAndT<T> two) {
         Optional<Integer> indexOfChildTwo = ListOps.findIndexOf(oneChild, two.children(), (childOne, childtwo) -> isASubset(childOne, childtwo).isEmpty());
-        if (debug) System.out.println("isIn " + indexOfChildTwo + "(" + oneChild + "---" + two);
-        return OptionalOps.invert(indexOfChildTwo, () -> new Difference<T>(oneChild.path, oneChild.t, two.t, "could not find the left item in the list on the right"));
+        Optional<Difference<T>> result = OptionalOps.invert(indexOfChildTwo, () -> new Difference<T>(oneChild.path, oneChild.t, two.t, "could not find [" + printer.apply(oneChild.t) + "] in ["+ printer.apply(two.t) +"]"));
+        debug(oneChild.path, "isIn " + indexOfChildTwo + "(" + oneChild + "---" + two + "           left: " + printer.apply(oneChild.t) + "rightChildren: " + two.children() + " result " + result);
+        return result;
     }
 }

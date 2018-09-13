@@ -11,12 +11,13 @@ import org.xingyi.utils.PathAndT;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 public class Xml implements HasChildAndEquals<Xml> {
 
     Node node;
 
-    public static Xml fromDocument(Document document){
+    public static Xml fromDocument(Document document) {
         return new Xml(document.getFirstChild());
     }
 
@@ -38,9 +39,24 @@ public class Xml implements HasChildAndEquals<Xml> {
 
     @Override
     public String toString() {
+//        List<PathAndT<Xml>> children = children(new ArrayList<>());
         return "Xml{" +
-                "node=" + node +
-                "children=" + children(new ArrayList<>()) +
+                "node=" + XmlOps.prettyPrint(node) +
+//                "children=" + children +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Xml xml = (Xml) o;
+        return Objects.equals(node, xml.node);
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(node);
     }
 }
