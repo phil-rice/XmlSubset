@@ -1,0 +1,11 @@
+target/
+.idea/
+*.iml
+
+/sbt
+/sbt-launch.jar
+/repositories-truststore.jks
+/repositories
+PID
+
+#*.jks
