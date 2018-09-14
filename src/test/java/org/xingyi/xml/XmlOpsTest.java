@@ -1,5 +1,6 @@
 package org.xingyi.xml;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
@@ -69,7 +70,19 @@ public class XmlOpsTest {
                 "Path{[hello, @attr]}/could not find [value] in [<hello/>]",
                 "Path{[hello, a]}/could not find [<a/>] in [<hello/>]"), checkIsSubset("<hello attr='value'><a /></hello>", "<hello />"));
 //        assertEquals(Arrays.asList("[#document, hello]:could not find the left item in the list on the right"), checkIsSubset("<hello><a /><b /></hello>", "<hello />"));
-
     }
 
+
+    @Test
+    public void testDeeperNotMatches() {
+        assertEquals(Arrays.asList("Path{[hello, a]}/could not find [<a attr=\"value\"/>] in [<hello><a/></hello>]"), checkIsSubset("<hello><a attr='value'></a></hello>", "<hello><a></a></hello>"));
+    }
+
+    @Test
+    @Ignore
+    public void testWeWantToChangeThis() {
+        //this should mention the path to a and maybe b at the very least
+        assertEquals(Arrays.asList(""), checkIsSubset("<hello><a><b attr='value'></b></a></hello>", "<hello><a><b /></a></hello>"));
+
+    }
 }
