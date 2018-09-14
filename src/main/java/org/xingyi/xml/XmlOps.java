@@ -56,11 +56,13 @@ public class XmlOps {
     }
 
 
+    static PathAndT<Xml> makeInitial(Xml xml) {
+        return new PathAndT<Xml>(new Path(Arrays.asList(new PathItem(xml.node.getNodeName()))), xml);
+    }
+
     static List<Difference<Xml>> isASubset(Xml one, Xml two) {
         Subset<Xml> subset = new SubsetImpl<>(x -> prettyPrint(x.node));
-        return subset.isASubset(
-                new PathAndT<Xml>(new Path(Arrays.asList(new PathItem(one.node.getNodeName()))), one),
-                new PathAndT<Xml>(new Path(Arrays.asList(new PathItem(two.node.getNodeName()))), two));
+        return subset.isASubset(makeInitial(one), makeInitial(two));
     }
 
     static List<Difference<Xml>> isASubset(String one, String two) {
