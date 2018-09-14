@@ -3,15 +3,9 @@ package org.xingyi.xml;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.xingyi.Difference;
-import org.xingyi.utils.HasChildAndEquals;
-import org.xingyi.utils.ListOps;
-import org.xingyi.utils.Path;
-import org.xingyi.utils.PathAndT;
+import org.xingyi.utils.*;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 public class Xml implements HasChildAndEquals<Xml> {
 
@@ -26,15 +20,18 @@ public class Xml implements HasChildAndEquals<Xml> {
     }
 
     @Override
-    public List<PathAndT<Xml>> children(List<Path> path) {
-        return ListOps.map(ListOps.append(XmlOps.attributes(node), XmlOps.childElements(node)), nameAndValue -> nameAndValue.toPathAndXml(path, node.getNodeName()));
+    public List<PathAndT<Xml>> children(Path path) {
+        return ListOps.map(
+                ListOps.append(XmlOps.attributes(node),
+                        XmlOps.childElements(node)),
+                nameAndValue -> nameAndValue.toPathAndXml(path, node.getNodeName()));
     }
 
     @Override
-    public List<Difference<Xml>> isEqualIgnoringChildren(List<Path> path, Xml other) {
-        if (node.getNodeName().equals(other.node.getNodeName()))
-            return new ArrayList<>();
-        return Arrays.asList(new Difference<>(path, this, other, "Node name mismatch. Looking for " + node.getNodeName() + " found " + other.node.getNodeName()));
+    public Optional<String> isEqualIgnoringChildren(Xml other) {
+        return OptionalOps.fromBoolean(
+                !node.getNodeName().equals(other.node.getNodeName()),
+                () -> "Node name mismatch. Looking for " + node.getNodeName() + " found " + other.node.getNodeName());
     }
 
     @Override
@@ -56,7 +53,6 @@ public class Xml implements HasChildAndEquals<Xml> {
 
     @Override
     public int hashCode() {
-
         return Objects.hash(node);
     }
 }

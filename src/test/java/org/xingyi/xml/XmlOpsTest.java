@@ -25,8 +25,8 @@ public class XmlOpsTest {
     public void testAttributes() {
         Node hello = someXml.getElementsByTagName("hello").item(0);
         NamedNodeMap attributes = hello.getAttributes();
-        Node helloa = attributes.item(0);
-        Node hellob = attributes.item(1);
+        Node helloa = attributes.item(0).getFirstChild();
+        Node hellob = attributes.item(1).getFirstChild();
         assertEquals(Arrays.asList(new NameAndValue("@a", helloa), new NameAndValue("@b", hellob)), XmlOps.attributes(hello));
     }
 
@@ -55,13 +55,19 @@ public class XmlOpsTest {
     }
 
     List<String> checkIsSubset(String one, String two) {
-        return ListOps.map(XmlOps.isASubset(one, two), d -> d.reason);
+        return ListOps.map(XmlOps.isASubset(one, two), d -> d.path + "/" + d.reason);
     }
 
     @Test
     public void testIsSubsetWhenNotSubset() {
-        assertEquals(Arrays.asList("could not find [<hello><a/></hello>] in [<hello/>]"), checkIsSubset("<hello><a /></hello>", "<hello />"));
-//        assertEquals(Arrays.asList("could not find [<hello><a /></hello>] in [<hello></hello>]"), checkIsSubset("<hello><a /><b /></hello>", "<hello />"));
+        assertEquals(Arrays.asList("Path{[hello, a]}/could not find [<a/>] in [<hello/>]"), checkIsSubset("<hello><a /></hello>", "<hello />"));
+        assertEquals(Arrays.asList(
+                "Path{[hello, a]}/could not find [<a/>] in [<hello/>]",
+                "Path{[hello, b]}/could not find [<b/>] in [<hello/>]"), checkIsSubset("<hello><a /><b /></hello>", "<hello />"));
+        assertEquals(Arrays.asList("Path{[hello, @attr]}/could not find [value] in [<hello/>]"), checkIsSubset("<hello attr='value'></hello>", "<hello />"));
+        assertEquals(Arrays.asList(
+                "Path{[hello, @attr]}/could not find [value] in [<hello/>]",
+                "Path{[hello, a]}/could not find [<a/>] in [<hello/>]"), checkIsSubset("<hello attr='value'><a /></hello>", "<hello />"));
 //        assertEquals(Arrays.asList("[#document, hello]:could not find the left item in the list on the right"), checkIsSubset("<hello><a /><b /></hello>", "<hello />"));
 
     }

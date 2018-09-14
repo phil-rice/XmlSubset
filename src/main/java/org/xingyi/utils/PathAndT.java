@@ -4,10 +4,10 @@ import java.util.List;
 import java.util.Objects;
 
 public class PathAndT<T extends HasChildren<T>> {
-    public final List<Path> path;
+    public final Path path;
     public final T t;
 
-    public PathAndT(List<Path> path, T t) {
+    public PathAndT(Path path, T t) {
         this.path = path;
         this.t = t;
     }
@@ -18,7 +18,7 @@ public class PathAndT<T extends HasChildren<T>> {
 
     @Override
     public String toString() {
-        return "PathAnd{" + path + " ==> " + t + '}';
+        return "PathAnd{" + path.path + " ==> " + t + '}';
     }
 
     @Override

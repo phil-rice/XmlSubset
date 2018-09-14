@@ -6,6 +6,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xingyi.*;
 import org.xingyi.utils.ListOps;
+import org.xingyi.utils.Path;
 import org.xingyi.utils.PathAndT;
 import org.xml.sax.SAXException;
 
@@ -55,11 +56,11 @@ public class XmlOps {
 
     static List<Difference<Xml>> isASubset(Xml one, Xml two) {
         Subset<Xml> subset = new SubsetImpl<>(x -> prettyPrint(x.node));
-        return subset.isASubset(new PathAndT<Xml>(new ArrayList<>(), one), new PathAndT<Xml>(new ArrayList<>(), two));
+        return subset.isASubset(new PathAndT<Xml>(new Path(), one), new PathAndT<Xml>(new Path(), two));
     }
 
     static List<Difference<Xml>> isASubset(String one, String two) {
-        return isASubset(new Xml(parseXml(one)), new Xml(parseXml(two)));
+        return isASubset(new Xml(parseXml(one).getFirstChild()), new Xml(parseXml(two).getFirstChild()));
     }
 
     static public void main(String[] args) throws IOException, SAXException {
@@ -88,7 +89,7 @@ public class XmlOps {
         if (attributes != null)
             for (int i = 0; i < attributes.getLength(); i++) {
                 Node item = attributes.item(i);
-                values.add(new NameAndValue("@" + item.getNodeName(), item));
+                values.add(new NameAndValue("@" + item.getNodeName(), item.getFirstChild()));
             }
         return values;
     }
