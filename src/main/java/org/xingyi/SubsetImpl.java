@@ -46,10 +46,14 @@ public class SubsetImpl<T extends HasChildAndEquals<T>> implements Subset<T> {
         return ListOps.<PathAndT<T>, Difference<T>>flatMap(one.children(), oneChild -> isIn(oneChild, two));
     }
 
-    private Optional<Difference<T>> isIn(PathAndT<T> oneChild, PathAndT<T> two) {
-        Optional<Integer> indexOfChildTwo = ListOps.findIndexOf(oneChild, two.children(), (childOne, childtwo) -> isASubset(childOne, childtwo).isEmpty());
-        Optional<Difference<T>> result = OptionalOps.invert(indexOfChildTwo, () -> new Difference<T>(oneChild.path, oneChild.t, two.t, "could not find [" + printer.apply(oneChild.t) + "] in [" + printer.apply(two.t) + "]"));
-        debug(oneChild, "isIn " + indexOfChildTwo + "(" + oneChild + "---" + two + "           left: " + printer.apply(oneChild.t) + "rightChildren: " + two.children() + " result " + result);
-        return result;
+    private List<Difference<T>> isIn(PathAndT<T> oneChild, PathAndT<T> twoParent) {
+        List<PathAndT<T>> candidates = ListOps.filter(twoParent.children(), (childtwo) -> !oneChild.t.isEqualIgnoringChildren(childtwo.t).isPresent());
+        if (candidates.size() == 0)
+            return Arrays.asList(new Difference<T>(oneChild.path, oneChild.t, twoParent.t, "could not find [" + printer.apply(oneChild.t) + "] in [" + printer.apply(twoParent.t) + "]"));
+        List<List<Difference<T>>> differences = ListOps.map(candidates, childtwo -> isASubset(oneChild, childtwo));
+        Optional<Integer> indexOfChild = ListOps.findIndexOf(differences, List::isEmpty);
+        if (indexOfChild.isPresent()) return Arrays.asList();
+        return ListOps.findSmallest(differences, List::size).orElse(Arrays.asList());
     }
 }
+

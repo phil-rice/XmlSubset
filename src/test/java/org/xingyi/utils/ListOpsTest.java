@@ -51,8 +51,8 @@ public class ListOpsTest {
 
     @Test
     public void testFlatMap() {
-        assertEquals(Arrays.asList(1, 3, 5), ListOps.flatMap(Arrays.asList(1, 2, 3, 4, 5), i -> i % 2 == 1 ? Optional.of(i) : Optional.empty()));
-        assertEquals(Arrays.asList(2, 4), ListOps.flatMap(Arrays.asList(1, 2, 3, 4, 5), i -> i % 2 == 0 ? Optional.of(i) : Optional.empty()));
+        assertEquals(Arrays.asList(1, 3, 5), ListOps.flatMap(Arrays.asList(1, 2, 3, 4, 5), i -> i % 2 == 1 ? Arrays.asList(i) : Arrays.asList()));
+        assertEquals(Arrays.asList(2, 4), ListOps.flatMap(Arrays.asList(1, 2, 3, 4, 5), i -> i % 2 == 0 ? Arrays.asList(i) : Arrays.asList()));
     }
 
     @Test
@@ -74,11 +74,11 @@ public class ListOpsTest {
 
     @Test
     public void testFindIndexOf() {
-        assertEquals(Optional.of(0), ListOps.findIndexOf(1, Arrays.asList(2, 4, 6, 8), (l, r) -> l + 1 == r));
-        assertEquals(Optional.of(1), ListOps.findIndexOf(3, Arrays.asList(2, 4, 6, 8), (l, r) -> l + 1 == r));
-        assertEquals(Optional.of(2), ListOps.findIndexOf(5, Arrays.asList(2, 4, 6, 8), (l, r) -> l + 1 == r));
-        assertEquals(Optional.of(3), ListOps.findIndexOf(7, Arrays.asList(2, 4, 6, 8), (l, r) -> l + 1 == r));
-        assertEquals(Optional.empty(), ListOps.findIndexOf(2, Arrays.asList(2, 4, 6, 8), (l, r) -> l + 1 == r));
+        assertEquals(Optional.of(0), ListOps.findIndexOf(Arrays.asList(2, 4, 6, 8), l -> l + 1 == 3));
+        assertEquals(Optional.of(1), ListOps.findIndexOf(Arrays.asList(2, 4, 6, 8), l -> l + 1 == 5));
+        assertEquals(Optional.of(2), ListOps.findIndexOf(Arrays.asList(2, 4, 6, 8), l -> l + 1 == 7));
+        assertEquals(Optional.of(3), ListOps.findIndexOf(Arrays.asList(2, 4, 6, 8), l -> l + 1 == 9));
+        assertEquals(Optional.empty(), ListOps.findIndexOf(Arrays.asList(2, 4, 6, 8), l -> l + 1 == 12));
     }
 
     @Test
@@ -87,5 +87,10 @@ public class ListOpsTest {
         assertEquals(Arrays.asList(), ListOps.filter(Arrays.asList(1, 2, 3, 4, 5), x -> x < 0));
     }
 
-
+    @Test
+    public void testFindLargest() {
+        assertEquals(Optional.empty(), ListOps.findSmallest(Arrays.<Integer>asList(), i -> i));
+        assertEquals(Optional.of("1"), ListOps.findSmallest(Arrays.asList("1", "2", "12", "11"), Integer::parseInt));
+        assertEquals(Optional.of("12"), ListOps.findSmallest(Arrays.asList("1", "2", "12", "11"), i-> -Integer.parseInt(i)));
+    }
 }

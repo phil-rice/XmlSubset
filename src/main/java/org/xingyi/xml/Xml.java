@@ -24,7 +24,7 @@ public class Xml implements HasChildAndEquals<Xml> {
         return ListOps.map(
                 ListOps.append(XmlOps.attributes(node),
                         XmlOps.childElements(node)),
-                nameAndValue -> nameAndValue.toPathAndXml(path, node.getNodeName()));
+                nameAndValue -> nameAndValue.toPathAndXml(path));
     }
 
     @Override

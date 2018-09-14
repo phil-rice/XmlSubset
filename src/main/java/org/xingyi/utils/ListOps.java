@@ -36,18 +36,18 @@ public interface ListOps {
         return result;
     }
 
-    static <From, To> List<To> flatMap(List<From> rawList, Function<From, Optional<To>> fn) {
+    static <From, To> List<To> flatMap(List<From> rawList, Function<From, List<To>> fn) {
         ArrayList<To> result = new ArrayList<To>();
         for (From from : rawList) {
-            Optional<To> optional = fn.apply(from);
-            optional.ifPresent(to -> result.add(to));
+            List<To> optional = fn.apply(from);
+            optional.forEach(to -> result.add(to));
         }
         return result;
     }
 
-    static <T> Optional<Integer> findIndexOf(T t, List<T> list, Function2<T, T, Boolean> matches) {
+    static <T> Optional<Integer> findIndexOf(List<T> list, Function<T, Boolean> matches) {
         for (int i = 0; i < list.size(); i++) {
-            if (matches.apply(t, list.get(i)))
+            if (matches.apply(list.get(i)))
                 return Optional.of(i);
         }
         return Optional.empty();
@@ -56,6 +56,19 @@ public interface ListOps {
     static <T> List<T> filter(List<T> list, Function<T, Boolean> fn) {
         List<T> result = new ArrayList<>();
         for (T t : list) if (fn.apply(t)) result.add(t);
+        return result;
+    }
+
+    static <T> Optional<T> findSmallest(List<T> list, Function<T, Integer> fn) {
+        Optional<T> result = Optional.empty();
+        Integer min = Integer.MAX_VALUE;
+        for (T t : list) {
+            int value = fn.apply(t);
+            if (value < min) {
+                result = Optional.of(t);
+                min = value;
+            }
+        }
         return result;
     }
 }

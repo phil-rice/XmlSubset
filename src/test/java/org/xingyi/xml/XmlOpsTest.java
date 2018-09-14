@@ -75,14 +75,11 @@ public class XmlOpsTest {
 
     @Test
     public void testDeeperNotMatches() {
-        assertEquals(Arrays.asList("Path{[hello, a]}/could not find [<a attr=\"value\"/>] in [<hello><a/></hello>]"), checkIsSubset("<hello><a attr='value'></a></hello>", "<hello><a></a></hello>"));
-    }
-
-    @Test
-    @Ignore
-    public void testWeWantToChangeThis() {
-        //this should mention the path to a and maybe b at the very least
-        assertEquals(Arrays.asList(""), checkIsSubset("<hello><a><b attr='value'></b></a></hello>", "<hello><a><b /></a></hello>"));
+        assertEquals(Arrays.asList("Path{[hello, a, @attr]}/could not find [value] in [<a/>]"), checkIsSubset("<hello><a attr='value'></a></hello>", "<hello><a></a></hello>"));
+        assertEquals(Arrays.asList("Path{[hello, a, b, @attr]}/could not find [value] in [<b/>]"), checkIsSubset("<hello><a><b attr='value'></b></a></hello>", "<hello><a><b /></a></hello>"));
+        assertEquals(Arrays.asList(
+                "Path{[hello, a, @attr1]}/could not find [val1] in [<a><b/></a>]",
+                "Path{[hello, a, b, @attr]}/could not find [value] in [<b/>]"), checkIsSubset("<hello><a attr1='val1'><b attr='value'></b></a></hello>", "<hello><a><b /></a></hello>"));
 
     }
 }

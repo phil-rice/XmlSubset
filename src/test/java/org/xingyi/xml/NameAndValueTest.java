@@ -24,8 +24,8 @@ public class NameAndValueTest {
     @Test
     public void testToPathAndXml() {
         Path pathSoFar = new Path(Arrays.asList(a, b));
-        PathAndT expected = new PathAndT(new Path(Arrays.asList(a, b, myName, someName)), new Xml(node));
-        PathAndT<Xml> actual = nameAndValue.toPathAndXml(pathSoFar, "myName");
+        PathAndT expected = new PathAndT(new Path(Arrays.asList(a, b, someName)), new Xml(node));
+        PathAndT<Xml> actual = nameAndValue.toPathAndXml(pathSoFar);
         Assert.assertEquals(expected.path, actual.path);
         Assert.assertEquals(expected, actual);
     }

@@ -18,8 +18,8 @@ public class NameAndValue {
         this.value = value;
     }
 
-    PathAndT<Xml> toPathAndXml(Path pathSoFar, String myName) {
-        return new PathAndT(pathSoFar.add(myName, name), new Xml(value));
+    PathAndT<Xml> toPathAndXml(Path pathSoFar) {
+        return new PathAndT(pathSoFar.add( name), new Xml(value));
     }
 
     @Override

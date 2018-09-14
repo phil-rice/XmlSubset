@@ -8,6 +8,7 @@ import org.xingyi.*;
 import org.xingyi.utils.ListOps;
 import org.xingyi.utils.Path;
 import org.xingyi.utils.PathAndT;
+import org.xingyi.utils.PathItem;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -21,6 +22,7 @@ import java.io.IOException;
 import java.io.StringBufferInputStream;
 import java.io.StringWriter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class XmlOps {
@@ -56,7 +58,9 @@ public class XmlOps {
 
     static List<Difference<Xml>> isASubset(Xml one, Xml two) {
         Subset<Xml> subset = new SubsetImpl<>(x -> prettyPrint(x.node));
-        return subset.isASubset(new PathAndT<Xml>(new Path(), one), new PathAndT<Xml>(new Path(), two));
+        return subset.isASubset(
+                new PathAndT<Xml>(new Path(Arrays.asList(new PathItem(one.node.getNodeName()))), one),
+                new PathAndT<Xml>(new Path(Arrays.asList(new PathItem(two.node.getNodeName()))), two));
     }
 
     static List<Difference<Xml>> isASubset(String one, String two) {

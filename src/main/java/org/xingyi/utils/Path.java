@@ -30,7 +30,7 @@ public class Path {
     @Override
     public int hashCode() { return Objects.hash(path); }
 
-    public Path add(String myName, String name) {
-        return new Path(ListOps.add(path, new PathItem(myName), new PathItem(name)));
+    public Path add( String name) {
+        return new Path(ListOps.add(path,  new PathItem(name)));
     }
 }
