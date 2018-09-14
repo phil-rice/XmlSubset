@@ -12,7 +12,7 @@ import java.util.Arrays;
 
 import static org.mockito.Mockito.mock;
 
-public class NameAndValueSpec {
+public class NameAndValueTest {
 
     org.w3c.dom.Node node = mock(Node.class);
     NameAndValue nameAndValue = new NameAndValue("someName", node);
@@ -24,6 +24,9 @@ public class NameAndValueSpec {
     @Test
     public void testToPathAndXml() {
         Path pathSoFar = new Path(Arrays.asList(a, b));
-        Assert.assertEquals(new PathAndT(new Path(Arrays.asList(a, b, myName, someName)), new Xml(node)), nameAndValue.toPathAndXml(pathSoFar, "myName"));
+        PathAndT expected = new PathAndT(new Path(Arrays.asList(a, b, myName, someName)), new Xml(node));
+        PathAndT<Xml> actual = nameAndValue.toPathAndXml(pathSoFar, "myName");
+        Assert.assertEquals(expected.path, actual.path);
+        Assert.assertEquals(expected, actual);
     }
 }

@@ -21,6 +21,7 @@ public interface ListOps {
         result.addAll(Arrays.asList(t));
         return result;
     }
+
     static <T> List<T> append(List<T> one, List<T> two) {
         ArrayList<T> result = new ArrayList<>(one);
         result.addAll(two);
@@ -46,9 +47,15 @@ public interface ListOps {
 
     static <T> Optional<Integer> findIndexOf(T t, List<T> list, Function2<T, T, Boolean> matches) {
         for (int i = 0; i < list.size(); i++) {
-            if (matches.apply( t,list.get(i)))
+            if (matches.apply(t, list.get(i)))
                 return Optional.of(i);
         }
         return Optional.empty();
+    }
+
+    static <T> List<T> filter(List<T> list, Function<T, Boolean> fn) {
+        List<T> result = new ArrayList<>();
+        for (T t : list) if (fn.apply(t)) result.add(t);
+        return result;
     }
 }

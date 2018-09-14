@@ -81,5 +81,11 @@ public class ListOpsTest {
         assertEquals(Optional.empty(), ListOps.findIndexOf(2, Arrays.asList(2, 4, 6, 8), (l, r) -> l + 1 == r));
     }
 
+    @Test
+    public void testFilter() {
+        assertEquals(Arrays.asList(1, 2, 3), ListOps.filter(Arrays.asList(1, 2, 3, 4, 5), x -> x < 4));
+        assertEquals(Arrays.asList(), ListOps.filter(Arrays.asList(1, 2, 3, 4, 5), x -> x < 0));
+    }
+
 
 }
